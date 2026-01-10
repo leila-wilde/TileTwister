@@ -36,6 +36,14 @@
 *.exe
 *.out
 *.app
+TileTwister 
 
 # debug information files
 *.dwo
+
+# macOS system files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
