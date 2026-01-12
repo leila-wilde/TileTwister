@@ -5,17 +5,13 @@
 
 class Tile : public GameObject {
 public:
-    // Constructor
-    Tile(int x, int y, int size);
+    Tile(int x, int y, int size, int value = 0);
     
-    // Override render method - renders as a geometric shape (rectangle)
     void render(SDL_Renderer* renderer) override;
-    
-    // Set color
-    void setColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
+    void setValue(int value);
     
 private:
-    SDL_Color color_;
+    int value_;
 };
 
 #endif // TILE_H

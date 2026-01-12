@@ -1,7 +1,7 @@
 # Compiler and flags
 CXX = clang++
-CXXFLAGS = -std=c++14 -Wall -Wextra -Isrc $(shell sdl2-config --cflags)
-LDFLAGS = $(shell sdl2-config --libs)
+CXXFLAGS = -std=c++14 -Wall -Wextra -Isrc $(shell sdl2-config --cflags) -I/opt/homebrew/include/SDL2
+LDFLAGS = $(shell sdl2-config --libs) -L/opt/homebrew/lib -lSDL2_ttf
 
 # Project name
 TARGET = TileTwister
