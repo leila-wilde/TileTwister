@@ -41,6 +41,9 @@ TileTwister
 # debug information files
 *.dwo
 
+# Build directory
+build/
+
 # macOS system files
 .DS_Store
 .DS_Store?

@@ -1,6 +1,11 @@
-#include "Game.h"
+#include "game/Game.h"
+#include "rendering/GameObject.h"
+#include "rendering/Tile.h"
 #include <SDL.h>
+#include <SDL_ttf.h>
 #include <iostream>
+#include <vector>
+#include <memory>
 
 int main() {
     // Initialize SDL
@@ -8,10 +13,17 @@ int main() {
         std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
         return 1;
     }
+    
+    // Initialize SDL_ttf
+    if (TTF_Init() == -1) {
+        std::cerr << "TTF_Init error: " << TTF_GetError() << std::endl;
+        SDL_Quit();
+        return 1;
+    }
 
     // Create window
     SDL_Window* window = SDL_CreateWindow(
-        "2048",
+        "Tile Twister",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         800,
@@ -43,6 +55,18 @@ int main() {
     const int offsetX = 100;
     const int offsetY = 100;
 
+    // Create tiles using GameObject pattern, reading values from game grid
+    std::vector<std::unique_ptr<GameObject>> tiles;
+    const Game::Grid& grid = game.getGrid();
+    for (int row = 0; row < 4; ++row) {
+        for (int col = 0; col < 4; ++col) {
+            int x = offsetX + col * (tileSize + padding);
+            int y = offsetY + row * (tileSize + padding);
+            int value = grid[row][col];
+            tiles.push_back(std::make_unique<Tile>(x, y, tileSize, value));
+        }
+    }
+
     // Main loop
     SDL_Event e;
     bool quit = false;
@@ -58,22 +82,9 @@ int main() {
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderClear(renderer);
 
-        // Set color to grey for tiles
-        SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
-
-        // Draw 4x4 grid of empty tiles
-        for (int row = 0; row < Game::GRID_SIZE; ++row) {
-            for (int col = 0; col < Game::GRID_SIZE; ++col) {
-                // Calculate position for this tile
-                int x = offsetX + col * (tileSize + padding);
-                int y = offsetY + row * (tileSize + padding);
-
-                // Create rectangle for this tile
-                SDL_Rect tileRect = {x, y, tileSize, tileSize};
-
-                // Draw filled rectangle
-                SDL_RenderFillRect(renderer, &tileRect);
-            }
+        // Render all tiles using GameObject interface
+        for (auto& tile : tiles) {
+            tile->render(renderer);
         }
 
         // Present the rendered frame
@@ -83,8 +94,10 @@ int main() {
     }
 
     // Cleanup
+    tiles.clear();  // Destroy all GameObject instances
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    TTF_Quit();
     SDL_Quit();
     
     return 0;

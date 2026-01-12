@@ -5,20 +5,15 @@
 
 class Game {
 public:
-    static constexpr int GRID_SIZE = 4;
-    using Grid = std::array<std::array<int, GRID_SIZE>, GRID_SIZE>;
+    using Grid = std::array<std::array<int, 4>, 4>;
 
-    // Constructor
     Game();
-    
-    // Initialize empty grid
     void initialize();
-    
-    // Accessors
     const Grid& getGrid() const;
     
 private:
     Grid grid_;
+    void addRandomTile();
 };
 
 #endif // GAME_H
