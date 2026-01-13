@@ -38,7 +38,7 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 
 # Clean build files
 clean:
-	rm -rf $(BUILD_DIR) $(TARGET)
+	rm -rf $(BUILD_DIR) $(TARGET) $(TEST_TARGET)
 
 # Rebuild (clean then build)
 rebuild: clean all
@@ -47,5 +47,15 @@ rebuild: clean all
 run: $(TARGET)
 	./$(TARGET)
 
+# Tests
+TEST_TARGET = test_game
+TEST_SOURCE = tests/test_game_init.cpp
+
+test: $(TEST_TARGET)
+	./$(TEST_TARGET)
+
+$(TEST_TARGET): $(TEST_SOURCE) $(GAME_DIR)/Game.cpp
+	$(CXX) $(CXXFLAGS) -Isrc $(TEST_SOURCE) $(GAME_DIR)/Game.cpp -o $(TEST_TARGET)
+
 # Phony targets (not actual files)
-.PHONY: all clean rebuild run
+.PHONY: all clean rebuild run test
